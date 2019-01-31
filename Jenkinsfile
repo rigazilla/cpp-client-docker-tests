@@ -18,11 +18,15 @@ pipeline {
                     ls -l $PW1
                     kinit -V -k -t $PW1 vrigamon@REDHAT.COM
                     brew download-build ${params.brewBuildName}
+                    rpm2cpio jdg-cpp-client-8.6.0.CR1-48.el7jdg.src.rpm | cpio -idmv
                     echo curl http://downloads.jboss.org/infinispan/9.3.5.Final/infinispan-server-9.3.5.Final.zip -O
                     popd
                     pushd centos7
                     sudo docker build -t hotrod-rhel7 .
-                    sudo docker run  -v $PWD/../hostdata:/home/jboss/hostdata:z -t hotrod-rhel7 echo "run command"
+                    sudo docker run  -v $PWD/../hostdata:/home/jboss/hostdata:z -t hotrod-rhel7 \
+                           /bin/bash -c "echo 'Running on docker' \
+                                      && tar zxvf hostdata/jdg-cpp-client-8.6.0.CR1-redhat-00155-BOTH.tar.gz \
+"
                 """
                 }
             }
