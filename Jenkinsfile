@@ -27,9 +27,9 @@ pipeline {
                            /bin/bash -c "echo 'Running on docker' \
                                       && ls && ls hostdata \
                                       && tar zxvf hostdata/jdg-cpp-client-8.6.0.CR1-redhat-00155-BOTH.tar.gz \
-                                      && unzip hostdata/infinispan-server-9.4.1.Final.zip \
+                                      && unzip hostdata/infinispan-server-9.3.5.Final.zip \
                                       && export JAVA_HOME=/usr/lib/jvm/java-1.8.0 \
-                                      && export JBOSS_HOME=/home/jboss/infinispan-server-9.4.1.Final/ \
+                                      && export JBOSS_HOME=/home/jboss/infinispan-server-9.3.5.Final/ \
                                       && cp ~/jdg-cpp-client-8.6.0.CR1-redhat-00155-BOTH/rhel7/test/data/* \$JBOSS_HOME/standalone/configuration \
                                       && cd jdg-cpp-client-8.6.0.CR1-redhat-00155-BOTH/ \
                                       && cd rhel7/ \
