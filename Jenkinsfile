@@ -14,6 +14,7 @@ pipeline {
                 withCredentials([file(credentialsId: 'vrigamon-krb', variable: 'PW1')]) {
                 sh """
                     pushd centos7
+                    rm -rf hostdata
                     mkdir hostdata
                     pushd hostdata
                     ls -l $PW1
@@ -33,6 +34,7 @@ pipeline {
                                       && cp ~/jdg-cpp-client-8.6.0.CR1-redhat-00155-BOTH/rhel7/test/data/* \$JBOSS_HOME/standalone/configuration \
                                       && cd jdg-cpp-client-8.6.0.CR1-redhat-00155-BOTH/ \
                                       && cd rhel7/ \
+                                      && rm -rf build \
                                       && mkdir build \
                                       && cd build \
                                       && cmake -DINSTALL_GTEST=FALSE .. \
