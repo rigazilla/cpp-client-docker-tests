@@ -18,7 +18,8 @@ RUN yum -y update && \
    cyrus-sasl-devel \
    cyrus-sasl-plain \
    cyrus-sasl-md5 \
-   cyrus-sasl-gssapi && \
+   cyrus-sasl-gssapi \
+   krb5-workstation && \
    yum -y groupinstall "Development Tools" && \
    yum clean all
 
