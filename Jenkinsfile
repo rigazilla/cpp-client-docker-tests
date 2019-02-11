@@ -3,8 +3,6 @@ pipeline {
     stages{
         stage('Test Linux') {
             agent {label 'RPM' }
-            environment {
-            }
             steps {
                 git url: 'https://github.com/rigazilla/cpp-client-docker-tests.git'
                 sh "echo Testing build ${brewBuildName}"
