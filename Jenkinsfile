@@ -16,7 +16,7 @@ pipeline {
                     ls -l $PW1
                     kinit -V -k -t $PW1 vrigamon@REDHAT.COM
                     brew download-build ${params.brewBuildName}
-                    rpm2cpio jdg-cpp-client-8.6.0.CR1-48.el7jdg.src.rpm | cpio -idmv
+                    rpm2cpio ${params.brewBuildName} | cpio -idmv
                     curl http://downloads.jboss.org/infinispan/9.4.1.Final/infinispan-server-9.4.1.Final.zip -O
                     popd
                     sudo docker build -t ${params.distro} .
