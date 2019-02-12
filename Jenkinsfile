@@ -16,24 +16,25 @@ pipeline {
                     ls -l $PW1
                     kinit -V -k -t $PW1 vrigamon@REDHAT.COM
                     brew download-build ${params.brewBuildName}
-                    rpm2cpio ${params.brewBuildName} | cpio -idmv
+                    rpm2cpio ${params.brewBuildName}.src.rpm | cpio -idmv
+                    rpm2cpio ${params.brewBuildName}.x86_64.rpm | cpio -idmv
                     curl http://downloads.jboss.org/infinispan/9.4.1.Final/infinispan-server-9.4.1.Final.zip -O
                     popd
                     sudo docker build -t ${params.distro} .
                     sudo docker run  -v `pwd`/hostdata:/home/jboss/hostdata:z -t ${params.distro} \
                            /bin/bash -c 'echo Running on docker \
                                       && ls && ls hostdata \
-                                      && tar zxvf hostdata/jdg-cpp-client-8.6.0.CR1-redhat-00155-BOTH.tar.gz \
+                                      && tar zxvf hostdata/jdg-cpp-client-*.tar.gz \
                                       && unzip hostdata/infinispan-server-9.4.1.Final.zip \
                                       && export JAVA_HOME=/usr/lib/jvm/java-1.8.0 \
                                       && export JBOSS_HOME=/home/jboss/infinispan-server-9.4.1.Final/ \
-                                      && ( cp ~/jdg-cpp-client-8.6.0.CR1-redhat-00155-BOTH/${params.srcDir}/test/data/* \$JBOSS_HOME/standalone/configuration || true ) \
-                                      && cd jdg-cpp-client-8.6.0.CR1-redhat-00155-BOTH/ \
+                                      && ( cp ~/jdg-cpp-client-*-BOTH/${params.srcDir}/test/data/* \$JBOSS_HOME/standalone/configuration || true ) \
+                                      && cd jdg-cpp-client-*-BOTH/ \
                                       && cd ${params.srcDir}/ \
                                       && rm -rf build \
                                       && mkdir build \
                                       && cd build \
-                                      && cmake -DINSTALL_GTEST=FALSE .. \
+                                      && cmake -DINSTALL_GTEST=FALSE -DHOTROD_PREBUILT_LIB_DIR=/home/jboss/hostdata/usr/lib64 -DHR_USE_SYSTEM_PROTOBUF=TRUE -DNOENABLE_WARNING_ERROR=TRUE -Dmaven.version.org.infinispan=${params.maven.version.org.infinispan} .. \
                                       && cmake --build . \
                                       && ctest -V \
 '
