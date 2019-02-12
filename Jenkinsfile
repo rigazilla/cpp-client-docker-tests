@@ -5,6 +5,7 @@ pipeline {
             agent {label 'RPM' }
             environment {
                 mavenVersionOpt = "${params.mavenVersionOrgInfinispan ? "" : "-Dmaven.version.org.infinispan=${params.mavenVersionOrgInfinispan}"}"
+                mavenSettingsFileOpt = "${params.mavenSettingsFile ? "" : "-Dmaven.settings.file=${params.mavenSettingsFile}"}"
             }
             steps {
                 git url: 'https://github.com/rigazilla/cpp-client-docker-tests.git'
