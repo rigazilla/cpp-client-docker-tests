@@ -3,6 +3,9 @@ pipeline {
     stages{
         stage('Test Linux') {
             agent {label 'RPM' }
+            environment {
+                mavenVersionOpt = "${params.mavenVersionOrgInfinispan ? "" : "-Dmaven.version.org.infinispan=${params.mavenVersionOrgInfinispan}"}"
+            }
             steps {
                 git url: 'https://github.com/rigazilla/cpp-client-docker-tests.git'
                 sh "echo Testing build ${brewBuildName}"
@@ -34,7 +37,7 @@ pipeline {
                                       && rm -rf build \
                                       && mkdir build \
                                       && cd build \
-                                      && cmake -DINSTALL_GTEST=FALSE -DHOTROD_PREBUILT_LIB_DIR=/home/jboss/hostdata/usr/lib64 -DHR_USE_SYSTEM_PROTOBUF=TRUE -DNOENABLE_WARNING_ERROR=TRUE -Dmaven.version.org.infinispan=${params.mavenVersionOrgInfinispan} .. \
+                                      && cmake -DINSTALL_GTEST=FALSE -DHOTROD_PREBUILT_LIB_DIR=/home/jboss/hostdata/usr/lib64 -DHR_USE_SYSTEM_PROTOBUF=TRUE -DNOENABLE_WARNING_ERROR=TRUE ${env.mavenVersionOpt} .. \
                                       && cmake --build . \
                                       && ctest -V \
 '
