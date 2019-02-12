@@ -4,12 +4,15 @@ pipeline {
         stage('Test Linux') {
             agent {label 'RPM' }
             environment {
-                mavenVersionOpt = "${params.mavenVersionOrgInfinispan ? "" : "-Dmaven.version.org.infinispan=${params.mavenVersionOrgInfinispan}"}"
-                mavenSettingsFileOpt = "${params.mavenSettingsFile ? "" : "-Dmaven.settings.file=${params.mavenSettingsFile}"}"
+                mavenVersionOpt = "${params.mavenVersionOrgInfinispan == '' ? '' : '-Dmaven.version.org.infinispan='+params.mavenVersionOrgInfinispan}"
+                mavenSettingsFileOpt = "${params.mavenSettingsFile == '' ? '' : '-Dmaven.settings.file='+params.mavenSettingsFile}"
             }
             steps {
                 git url: 'https://github.com/rigazilla/cpp-client-docker-tests.git'
                 sh "echo Testing build ${brewBuildName}"
+                sh "echo Testing with param ${params}"
+                sh "echo Testing with ispn version ${env.mavenVersionOrgInfinispan}"
+                sh "echo Testing with settings ${env.mavenSettingsFileOpt}"
                                 // Cloning jdg-cpp-client repo via rhpkg
                 withCredentials([file(credentialsId: 'vrigamon-krb', variable: 'PW1')]) {
                 sh """
@@ -38,7 +41,7 @@ pipeline {
                                       && rm -rf build \
                                       && mkdir build \
                                       && cd build \
-                                      && cmake -DINSTALL_GTEST=FALSE -DHOTROD_PREBUILT_LIB_DIR=/home/jboss/hostdata/usr/lib64 -DHR_USE_SYSTEM_PROTOBUF=TRUE -DNOENABLE_WARNING_ERROR=TRUE ${env.mavenVersionOpt} .. \
+                                      && cmake -DINSTALL_GTEST=FALSE -DHOTROD_PREBUILT_LIB_DIR=/home/jboss/hostdata/usr/lib64 -DHR_USE_SYSTEM_PROTOBUF=TRUE -DNOENABLE_WARNING_ERROR=TRUE ${env.mavenVersionOpt} ${env.mavenSettingsFileOpt} .. \
                                       && cmake --build . \
                                       && ctest -V \
 '
