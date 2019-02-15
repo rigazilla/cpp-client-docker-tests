@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<settings xmlns="http://maven.apache.org/settings/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <localRepository>${user.home}/.m2/jdg-mead-repository</localRepository>
+
+    <!-- This is to exclude all repositories except the ones defined below -->
+    <mirrors>
+      <mirror>
+        <id>jdg7-mirror-setting</id>
+        <mirrorOf>*,!mead-jdg7,!mead-jdg7-plugins,!jdg7-snapshots</mirrorOf>
+        <name>Mirror Settings for JDG 7 build</name>
+        <url>http://host-8-240-249.host.centralci.eng.rdu2.redhat.com:8081/nexus/content/repositories/invalid</url>
+      </mirror>
+    </mirrors>
+
+    <profiles>
+
+        <profile>
+            <id>jdg-mead-repository</id>
+            <repositories>
+                <repository>
+                    <id>mead-jdg7</id>
+                    <name>MEAD JDG7 Maven Repository</name>
+                    <url>http://download.eng.bos.redhat.com/brewroot/repos/jb-dg-7-rhel-7-build/latest/maven/</url>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>never</updatePolicy>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>mead-jdg7-plugins</id>
+                    <name>MEAD JDG7 Maven Plugin Repository</name>
+                    <url>http://download.eng.bos.redhat.com/brewroot/repos/jb-dg-7-rhel-7-build/latest/maven/</url>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>never</updatePolicy>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+
+	      <profile>
+            <id>jdg7-snapshots-repository</id>
+            <repositories>
+                <repository>
+                    <id>jdg7-snapshots</id>
+                    <name>JDG7 Snapshots Maven Repository (Nexus, via Jenkins)</name>
+                    <url>http://host-8-240-249.host.centralci.eng.rdu2.redhat.com:8081/nexus/content/repositories/snapshots/</url>
+                    <releases>
+                        <enabled>false</enabled>
+                        <updatePolicy>never</updatePolicy>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                        <updatePolicy>always</updatePolicy>
+                    </snapshots>
+                </repository>
+            </repositories>
+        </profile>
+
+    </profiles>
+
+    <activeProfiles>
+        <activeProfile>jdg-mead-repository</activeProfile>
+        <activeProfile>jdg7-snapshots-repository</activeProfile>
+    </activeProfiles>
+
+</settings>
