@@ -5,7 +5,7 @@ pipeline {
             agent {label 'RPM' }
             environment {
                 mavenVersionOpt = "${params.mavenVersionOrgInfinispan == '' ? '' : '-Dmaven.version.org.infinispan='+params.mavenVersionOrgInfinispan}"
-                mavenSettingsFileOpt = "${params.mavenSettingsFile == '' ? '' : '-Dmaven.settings.file='+params.mavenSettingsFile}"
+                mavenSettingsFileOpt = "${params.mavenSettingsFile == '' ? '' : '-Dmaven.settings.file=/home/jboss/hostdata/maven-settings.xml'}"
             }
             steps {
                 git url: 'https://github.com/rigazilla/cpp-client-docker-tests.git'
@@ -20,6 +20,9 @@ pipeline {
                     rm -rf hostdata
                     mkdir hostdata
                     pushd hostdata
+                    if [ X${params.mavenSettingsFile} != X ]; then
+                       cp ${env.WORKSPACE}/${params.mavenSettingsFile} maven-settings.xml
+                    fi
                     ls -l $PW1
                     kinit -V -k -t $PW1 vrigamon@REDHAT.COM
                     brew download-build ${params.brewBuildName}
